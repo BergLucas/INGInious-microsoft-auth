@@ -1,0 +1,76 @@
+[project]
+name = "INGInious-microsoft-auth"
+version = "0.1.0"
+description = "INGInious-microsoft-auth is a plugin that adds Microsoft authentication to INGInious."
+authors = [
+    { name = "Berg Lucas", email = "55436804+BergLucas@users.noreply.github.com" },
+]
+readme = "README.md"
+license = "AGPL-3.0"
+keywords = ["Poetry", "INGInious-microsoft-auth"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3.9",
+    "License :: OSI Approved :: GNU Affero General Public License v3",
+]
+include = [
+    "src/inginious_microsoft_auth/static/**/*",
+]
+requires-python = ">=3.9,<4.0"
+dependencies = ["inginious (>=0.9.0,<0.10.0)"]
+
+[tool.poetry]
+requires-poetry = "^2.0.0"
+packages = [{ include = "inginious_microsoft_auth", from = "src" }]
+
+[tool.poetry.requires-plugins]
+poethepoet = "^0.33.0"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.9.10"
+mypy = "^1.15.0"
+coverage = "^7.6.12"
+
+[tool.poe.tasks]
+test = "python -m unittest -v"
+coverage = "coverage run -m unittest -v"
+coverage-report = ["coverage", { cmd = "coverage report" }]
+coverage-html = ["coverage", { cmd = "coverage html" }]
+format = "ruff format src tests"
+check = "ruff check --fix src tests"
+check-nofix = "ruff check src tests"
+check-unsafe = "ruff check --fix --unsafe src tests"
+typecheck = "mypy src tests"
+lint = ["format", "check", "typecheck"]
+verify = ["lint", "test"]
+
+[tool.coverage.run]
+branch = true
+source = ["src/inginious_microsoft_auth", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "N",   # pep8-naming
+    "I",   # isort
+    "C",   # flake8-comprehensions
+    "B",   # flake8-bugbear
+    "S",   # flake8-bandit
+    "TCH", # flake8-type-checking
+    "Q",   # flake8-quotes
+    "PL",  # pylint
+]
+
+ignore = ["D100", "D104"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.mypy]
+ignore_missing_imports = true
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
